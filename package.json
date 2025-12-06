@@ -19,5 +19,8 @@
   "type": "module",
   "bin": {
     "dev-genesis-readme-stats": "./bin/cli.js"
+  },
+  "dependencies": {
+    "commander": "^14.0.2"
   }
 }
