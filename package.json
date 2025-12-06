@@ -1,0 +1,23 @@
+{
+  "name": "readme-stats",
+  "version": "1.0.0",
+  "description": "A tool to generate README stats for GitHub repositories",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "github",
+    "readme",
+    "stats",
+    "repository",
+    "tool"
+  ],
+  "author": "Gavin Hensley",
+  "license": "MIT",
+  "packageManager": "pnpm@10.24.0",
+  "type": "module",
+  "bin": {
+    "dev-genesis-readme-stats": "./bin/cli.js"
+  }
+}
