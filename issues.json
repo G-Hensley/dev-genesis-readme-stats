@@ -1,0 +1,113 @@
+{
+  "project": {
+    "name": "readme-stats",
+    "description": "A zero-config CLI that scores your README against best practices and tells you exactly what's missing",
+    "generated": "2025-12-05"
+  },
+  "milestones": [
+    {
+      "name": "Phase 1: Foundation",
+      "description": "Project setup and core architecture"
+    },
+    {
+      "name": "Phase 2: Core Features",
+      "description": "README analysis, scoring system, and CLI output"
+    },
+    {
+      "name": "Phase 3: Polish & Launch",
+      "description": "Testing, documentation, and npm publishing"
+    }
+  ],
+  "issues": [
+    {
+      "title": "Initialize Node.js project with package.json",
+      "body": "## Description\n\nSet up the initial Node.js project structure for the readme-stats CLI tool.\n\n## Acceptance Criteria\n\n- [ ] package.json created with appropriate name, version, description\n- [ ] `bin` field configured for CLI entry point (`readme-stats`)\n- [ ] `type: module` set for ES modules (or CommonJS if preferred)\n- [ ] .gitignore configured for Node.js\n- [ ] MIT license file added\n- [ ] Basic folder structure created\n\n## Technical Notes\n\n- Keep dependencies minimal per spec (chalk for colors OR zero-dep with ANSI codes)\n- Consider using `#!/usr/bin/env node` shebang\n- Entry point should be `index.js` or `bin/readme-stats.js`",
+      "labels": ["phase-1", "setup", "priority: critical"],
+      "milestone": "Phase 1: Foundation"
+    },
+    {
+      "title": "Set up CLI argument parsing",
+      "body": "## Description\n\nImplement basic CLI argument handling to accept an optional file path argument.\n\n## Acceptance Criteria\n\n- [ ] CLI accepts optional path argument (defaults to `./README.md`)\n- [ ] `--help` flag shows usage information\n- [ ] `--version` flag shows package version\n- [ ] Invalid arguments show helpful error message\n\n## Technical Notes\n\n- Can use `process.argv` directly to keep zero-dep\n- No need for heavy CLI framework for this simple use case\n- Usage: `readme-stats [path/to/README.md]`\n\n## Dependencies\n\n- Depends on: Project initialization (#1)",
+      "labels": ["phase-1", "feature", "priority: critical"],
+      "milestone": "Phase 1: Foundation"
+    },
+    {
+      "title": "Implement README file reader",
+      "body": "## Description\n\nCreate functionality to read README.md from the filesystem.\n\n## Acceptance Criteria\n\n- [ ] Reads file from current directory by default\n- [ ] Reads file from specified path if provided\n- [ ] Graceful error handling if file not found\n- [ ] Graceful error handling if file not readable\n- [ ] Returns file content as string\n\n## Technical Notes\n\n- Use `fs.readFileSync` or `fs.promises.readFile`\n- Check file exists before reading\n- Handle encoding (UTF-8)\n\n## Dependencies\n\n- Depends on: CLI argument parsing (#2)",
+      "labels": ["phase-2", "feature", "priority: critical"],
+      "milestone": "Phase 2: Core Features"
+    },
+    {
+      "title": "Implement section detection with regex patterns",
+      "body": "## Description\n\nCreate regex-based detection system to identify README sections by heading patterns.\n\n## Acceptance Criteria\n\n- [ ] Detects Title (H1 heading or first line)\n- [ ] Detects Description (content after title, before first H2)\n- [ ] Detects Installation section (\"Install\", \"Installation\", \"Setup\", \"Getting Started\")\n- [ ] Detects Usage section (\"Usage\", \"How to Use\", \"Examples\")\n- [ ] Detects License section (\"License\", \"Licensing\")\n- [ ] Detects Contributing section (\"Contributing\", \"Contribute\", \"Contributors\")\n- [ ] Detects Badges (shield.io links, badge images in first 20 lines)\n- [ ] Detects Table of Contents (\"Table of Contents\", \"TOC\", \"Contents\")\n- [ ] Case-insensitive matching\n- [ ] Handles both `#` and underline-style headings\n\n## Technical Notes\n\n- Create a map of section types to regex patterns\n- Consider variations mentioned in spec\n- Return object with detected sections and their line numbers\n\n## Dependencies\n\n- Depends on: README file reader (#3)",
+      "labels": ["phase-2", "feature", "priority: critical"],
+      "milestone": "Phase 2: Core Features"
+    },
+    {
+      "title": "Implement scoring system",
+      "body": "## Description\n\nCreate the scoring algorithm that assigns points based on detected sections.\n\n## Acceptance Criteria\n\n- [ ] High value sections (20 pts each): Title, Description, Installation, Usage\n- [ ] Medium value sections (10 pts each): License, Contributing\n- [ ] Low value sections (5 pts each): Badges, Table of Contents\n- [ ] TOC only scored if README > 200 lines\n- [ ] Maximum score is 100 points\n- [ ] Returns breakdown of points per section\n- [ ] Returns list of missing sections\n\n## Technical Notes\n\n- Score calculation: present sections sum their points\n- Handle edge case where all sections present (cap at 100)\n- Consider: 4×20 + 2×10 + 2×5 = 110 max, so normalize or adjust weights\n- Alternative: Only count TOC toward 100 if file > 200 lines\n\n## Dependencies\n\n- Depends on: Section detection (#4)",
+      "labels": ["phase-2", "feature", "priority: critical"],
+      "milestone": "Phase 2: Core Features"
+    },
+    {
+      "title": "Implement colored CLI output",
+      "body": "## Description\n\nCreate formatted, colored terminal output for the analysis results.\n\n## Acceptance Criteria\n\n- [ ] Display overall score prominently\n- [ ] Green color for score > 80\n- [ ] Yellow color for score 51-80\n- [ ] Red color for score ≤ 50\n- [ ] List all detected sections with checkmarks\n- [ ] List missing sections with X marks\n- [ ] Show suggestions for each missing section\n- [ ] Output completes in under 1 second\n\n## Technical Notes\n\n- Option 1: Use `chalk` package for colors\n- Option 2: Use raw ANSI escape codes for zero-dep\n- ANSI codes: `\\x1b[32m` (green), `\\x1b[33m` (yellow), `\\x1b[31m` (red), `\\x1b[0m` (reset)\n- Consider non-TTY output (no colors when piped)\n\n## Dependencies\n\n- Depends on: Scoring system (#5)",
+      "labels": ["phase-2", "feature", "priority: high"],
+      "milestone": "Phase 2: Core Features"
+    },
+    {
+      "title": "Create suggestions for missing sections",
+      "body": "## Description\n\nProvide helpful, actionable suggestions for each missing section.\n\n## Acceptance Criteria\n\n- [ ] Title suggestion: explains importance of clear project name\n- [ ] Description suggestion: what to include in description\n- [ ] Installation suggestion: example commands to include\n- [ ] Usage suggestion: code examples recommendation\n- [ ] License suggestion: common licenses to consider\n- [ ] Contributing suggestion: what to include\n- [ ] Badges suggestion: common badges to add\n- [ ] TOC suggestion: when and how to add\n\n## Technical Notes\n\n- Keep suggestions concise (1-2 sentences)\n- Make them actionable (\"Add a ## Installation section with...\")\n- Store as simple object/map for easy maintenance\n\n## Dependencies\n\n- Depends on: Section detection (#4)",
+      "labels": ["phase-2", "feature", "priority: high"],
+      "milestone": "Phase 2: Core Features"
+    },
+    {
+      "title": "Add unit tests for section detection",
+      "body": "## Description\n\nCreate comprehensive tests for the regex-based section detection.\n\n## Acceptance Criteria\n\n- [ ] Test each section type detection\n- [ ] Test heading variations (\"Install\" vs \"Installation\")\n- [ ] Test case insensitivity\n- [ ] Test H1/H2 with # syntax\n- [ ] Test underline-style headings (===, ---)\n- [ ] Test edge cases (empty file, no headings)\n- [ ] All tests pass\n\n## Technical Notes\n\n- Use Node.js built-in test runner (`node:test`) for zero-dep\n- Or use minimal test framework if preferred\n- Create sample README fixtures for testing\n\n## Dependencies\n\n- Depends on: Section detection (#4)",
+      "labels": ["phase-3", "area: testing", "priority: high"],
+      "milestone": "Phase 3: Polish & Launch"
+    },
+    {
+      "title": "Add unit tests for scoring system",
+      "body": "## Description\n\nCreate tests for the scoring algorithm.\n\n## Acceptance Criteria\n\n- [ ] Test perfect README (all sections) = 100\n- [ ] Test empty README = 0\n- [ ] Test partial README scores correctly\n- [ ] Test TOC scoring with <200 lines (not counted)\n- [ ] Test TOC scoring with >200 lines (counted)\n- [ ] Test score breakdown accuracy\n\n## Technical Notes\n\n- Use same test framework as section detection tests\n- Create mock section detection results\n\n## Dependencies\n\n- Depends on: Scoring system (#5)\n- Depends on: Section detection tests (#8)",
+      "labels": ["phase-3", "area: testing", "priority: high"],
+      "milestone": "Phase 3: Polish & Launch"
+    },
+    {
+      "title": "Add integration tests with sample READMEs",
+      "body": "## Description\n\nCreate end-to-end tests with real-world README examples.\n\n## Acceptance Criteria\n\n- [ ] Test against minimal README (just title)\n- [ ] Test against complete README (all sections)\n- [ ] Test against popular open source README styles\n- [ ] Test against README with unusual formatting\n- [ ] All tests complete in under 1 second total\n\n## Technical Notes\n\n- Create `test/fixtures/` directory with sample READMEs\n- Test CLI output formatting\n- Consider snapshot testing for output\n\n## Dependencies\n\n- Depends on: Colored CLI output (#6)",
+      "labels": ["phase-3", "area: testing", "priority: medium"],
+      "milestone": "Phase 3: Polish & Launch"
+    },
+    {
+      "title": "Write README for readme-stats",
+      "body": "## Description\n\nCreate a comprehensive README that demonstrates the tool's own best practices (and scores 100!).\n\n## Acceptance Criteria\n\n- [ ] Clear title and description\n- [ ] Installation instructions (npm install)\n- [ ] Usage examples with sample output\n- [ ] Scoring criteria documentation\n- [ ] Section variations table\n- [ ] License section\n- [ ] Contributing section\n- [ ] Badges (npm version, license, etc.)\n- [ ] README scores 100 with the tool itself\n\n## Technical Notes\n\n- This is a great opportunity to dogfood the tool\n- Include screenshot or ASCII art of sample output\n- Keep it concise but complete\n\n## Dependencies\n\n- Depends on: All Phase 2 features complete",
+      "labels": ["phase-3", "documentation", "priority: high"],
+      "milestone": "Phase 3: Polish & Launch"
+    },
+    {
+      "title": "Prepare for npm publishing",
+      "body": "## Description\n\nFinalize package.json and prepare for npm publish.\n\n## Acceptance Criteria\n\n- [ ] package.json has correct `name` (check npm availability)\n- [ ] package.json has `keywords` for discoverability\n- [ ] package.json has `repository`, `bugs`, `homepage` fields\n- [ ] `files` field specifies what to publish\n- [ ] .npmignore or files field excludes tests/dev files\n- [ ] `npm pack` produces clean tarball\n- [ ] `npx readme-stats` works after local install\n\n## Technical Notes\n\n- Check if `readme-stats` is available on npm\n- Alternative names: `readme-score`, `readme-check`, `readme-lint`\n- Test with `npm link` locally\n\n## Dependencies\n\n- Depends on: README complete (#11)\n- Depends on: All tests passing (#8, #9, #10)",
+      "labels": ["phase-3", "setup", "priority: high"],
+      "milestone": "Phase 3: Polish & Launch"
+    },
+    {
+      "title": "Handle edge case: no README found",
+      "body": "## Description\n\nProvide helpful output when no README.md exists in the target directory.\n\n## Acceptance Criteria\n\n- [ ] Clear error message when file not found\n- [ ] Suggest creating a README\n- [ ] List the sections that should be included\n- [ ] Exit with non-zero code\n\n## Technical Notes\n\n- Could offer to create a template README (stretch goal, out of MVP scope)\n- Error should be red-colored\n\n## Dependencies\n\n- Depends on: README file reader (#3)",
+      "labels": ["phase-2", "enhancement", "priority: medium"],
+      "milestone": "Phase 2: Core Features"
+    },
+    {
+      "title": "Handle edge case: binary or non-text files",
+      "body": "## Description\n\nGracefully handle when the specified file is not a valid text file.\n\n## Acceptance Criteria\n\n- [ ] Detect non-UTF8 or binary content\n- [ ] Show appropriate error message\n- [ ] Exit with non-zero code\n\n## Technical Notes\n\n- Check for null bytes or invalid UTF-8 sequences\n- This is a defensive measure, unlikely in practice\n\n## Dependencies\n\n- Depends on: README file reader (#3)",
+      "labels": ["phase-3", "enhancement", "priority: low"],
+      "milestone": "Phase 3: Polish & Launch"
+    },
+    {
+      "title": "Add --no-color flag for CI environments",
+      "body": "## Description\n\nAllow users to disable colored output for CI/CD pipelines or logging.\n\n## Acceptance Criteria\n\n- [ ] `--no-color` flag disables ANSI codes\n- [ ] Auto-detect non-TTY and disable colors\n- [ ] Respects `NO_COLOR` environment variable\n- [ ] Output remains readable without colors\n\n## Technical Notes\n\n- Check `process.stdout.isTTY`\n- Check `process.env.NO_COLOR`\n- This helps future CI integration (even though out of MVP scope)\n\n## Dependencies\n\n- Depends on: Colored CLI output (#6)",
+      "labels": ["phase-3", "enhancement", "priority: low"],
+      "milestone": "Phase 3: Polish & Launch"
+    }
+  ]
+}
