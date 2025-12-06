@@ -17,5 +17,7 @@
   "license": "MIT",
   "packageManager": "pnpm@10.24.0",
   "type": "module",
-  "bin": "dev-genesis-readme-stats"
+  "bin": {
+    "dev-genesis-readme-stats": "./bin/cli.js"
+  }
 }
