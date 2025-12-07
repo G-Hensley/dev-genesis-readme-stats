@@ -5,6 +5,20 @@ import { Command } from 'commander';
 const { default: pkg } = await import('./package.json', { with: { type: "json" } });
 const version = pkg.version;
 
+const readFile = (filePath) => {
+  try {
+    const data = fs.readFileSync(filePath, 'utf-8');
+    return data;
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      console.error(`File not found: ${filePath}`);
+    } else {
+      console.error(error.message);
+    }
+    process.exit(1);
+  }
+};
+
 const program = new Command();
 
 // Define the CLI structure and commands
@@ -23,17 +37,3 @@ program.command('analyze')
 
 // Parse the command-line arguments
 program.parse();
-
-const readFile = (filePath) => {
-  try {
-    const data = fs.readFileSync(filePath, 'utf-8');
-    return data;
-  } catch (error) {
-    if (error.code === 'ENOENT') {
-      console.error(`File not found: ${filePath}`);
-    } else {
-      console.error(`Error reading file at ${filePath}:`, error.message);
-    }
-    process.exit(1);
-  }
-};
