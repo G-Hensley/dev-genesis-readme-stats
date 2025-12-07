@@ -17,7 +17,6 @@ program.command('analyze')
   .argument('<file>', 'path to the README file')
   .action((filePath) => {
     console.log(`Analyzing README file: ${filePath}`);
-    console.log(version);
     // TODO: Add analysis logic here
   });
 
