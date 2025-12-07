@@ -14,6 +14,7 @@ program.command('analyze')
   .argument('<file>', 'path to the README file')
   .action((str) => {
     console.log(`Analyzing README file: ${str}`);
+    // TODO: Add analysis logic here
   });
 
 // Parse the command-line arguments
