@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import fs from 'fs';
 import { Command } from 'commander';
 const { default: pkg } = await import('./package.json', { with: { type: "json" } });
 const version = pkg.version;
@@ -22,3 +23,13 @@ program.command('analyze')
 
 // Parse the command-line arguments
 program.parse();
+
+const readFile = (filePath) => {
+  try {
+    const data = fs.readFileSync(filePath, 'utf-8');
+    return data;
+  } catch (error) {
+    console.error(`Error reading file at ${filePath}:`, error.message);
+    process.exit(1);
+  }
+};
