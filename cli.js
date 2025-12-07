@@ -14,7 +14,6 @@ program
 
 program.command('analyze')
   .description('Analyze the README file for completeness')
-  .option('-v, --version', 'output the version number')
   .argument('<file>', 'path to the README file')
   .action((filePath) => {
     console.log(`Analyzing README file: ${filePath}`);
