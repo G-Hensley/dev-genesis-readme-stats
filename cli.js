@@ -29,7 +29,11 @@ const readFile = (filePath) => {
     const data = fs.readFileSync(filePath, 'utf-8');
     return data;
   } catch (error) {
-    console.error(`Error reading file at ${filePath}:`, error.message);
+    if (error.code === 'ENOENT') {
+      console.error(`File not found: ${filePath}`);
+    } else {
+      console.error(`Error reading file at ${filePath}:`, error.message);
+    }
     process.exit(1);
   }
 };
