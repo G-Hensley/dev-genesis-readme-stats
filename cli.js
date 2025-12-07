@@ -1,8 +1,23 @@
 #!/usr/bin/env node
 
+import fs from 'fs';
 import { Command } from 'commander';
 const { default: pkg } = await import('./package.json', { with: { type: "json" } });
 const version = pkg.version;
+
+const readFile = (filePath) => {
+  try {
+    const data = fs.readFileSync(filePath, 'utf-8');
+    return data;
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      console.error(`File not found: ${filePath}`);
+    } else {
+      console.error(error.message);
+    }
+    process.exit(1);
+  }
+};
 
 const program = new Command();
 
