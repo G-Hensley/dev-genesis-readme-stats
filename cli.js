@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-const version = import('./package.json').version;
+const { default: pkg } = await import('./package.json', { with: { type: "json" } });
+const version = pkg.version;
 
 const program = new Command();
 
@@ -13,9 +14,11 @@ program
 
 program.command('analyze')
   .description('Analyze the README file for completeness')
+  .option('-v, --version', 'output the version number')
   .argument('<file>', 'path to the README file')
   .action((filePath) => {
     console.log(`Analyzing README file: ${filePath}`);
+    console.log(version);
     // TODO: Add analysis logic here
   });
 
