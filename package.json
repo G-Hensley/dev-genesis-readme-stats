@@ -18,6 +18,9 @@
   "packageManager": "pnpm@10.24.0",
   "type": "module",
   "bin": {
-    "dev-genesis-readme-stats": "./bin/cli.js"
+    "dev-genesis-readme-stats": "./cli.js"
+  },
+  "dependencies": {
+    "commander": "^14.0.2"
   }
 }
