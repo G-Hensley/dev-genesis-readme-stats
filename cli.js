@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { Command } from 'commander';
 const version = import('./package.json').version;
 
@@ -12,8 +14,8 @@ program
 program.command('analyze')
   .description('Analyze the README file for completeness')
   .argument('<file>', 'path to the README file')
-  .action((str) => {
-    console.log(`Analyzing README file: ${str}`);
+  .action((filePath) => {
+    console.log(`Analyzing README file: ${filePath}`);
     // TODO: Add analysis logic here
   });
 
