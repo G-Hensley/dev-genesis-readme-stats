@@ -1,4 +1,5 @@
 import { Command } from 'commander';
+const version = import('./package.json').version;
 
 const program = new Command();
 
@@ -6,7 +7,7 @@ const program = new Command();
 program
   .name('readme-stats')
   .description('CLI tool to analyze README files')
-  .version('1.0.0');
+  .version(version);
 
 program.command('analyze')
   .description('Analyze the README file for completeness')
