@@ -1,5 +1,4 @@
-// TODO: Create scoring algorithm that assigns points based on detected sections score 1-100
-
+// Scores assigned to each README section or element
 const scores = {
   title: 15,
   tagline: 5,
@@ -22,6 +21,7 @@ const scores = {
   deleteInstruction: -10,
 }
 
+// Function to calculate total score based on analysis results
 const calculateScore = (analysisResults) => {
   let totalScore = 0;
   for (const [section, present] of Object.entries(analysisResults)) {
@@ -30,4 +30,6 @@ const calculateScore = (analysisResults) => {
     }
   }
   return Math.min(totalScore, 100); // Cap score at 100
-}
+};
+
+export default calculateScore;
