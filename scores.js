@@ -3,7 +3,6 @@ const scores = {
   title: 15,
   tagline: 5,
   badges: 2,
-  horizontalRule: 1,
   whatAndWhy: 15,
   quickStart: 10,
   visualPreview: 5,
@@ -29,15 +28,15 @@ const calculateScore = (analysisResults) => {
  * @returns {Object} Object containing totalScore (capped at 100) and missingCategories array
  */
   let totalScore = 0;
-  let missingCategories = [];
+  let missingSections = [];
   for (const [section, present] of Object.entries(analysisResults)) {
     if (present && scores[section]) {
       totalScore += scores[section];
     } else if (!present && scores[section] && scores[section] > 0) {
-      missingCategories.push(section);
+      missingSections.push(section);
     }
   }
-  return Math.min(totalScore, 100), missingCategories; // Cap score at 100
+  return Math.min(totalScore, 100), missingSections; // Cap score at 100
 };
 
 export { scores };
