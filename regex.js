@@ -1,7 +1,5 @@
 // Regex patterns for validating README sections
 
-import { table } from "console";
-
 const regexPatterns = {
   // Title - H1 heading at the start
   title: /^# .+/,
@@ -21,12 +19,12 @@ const regexPatterns = {
 
   // Specific sections
   whatAndWhy: /^## What & Why/mi,
-  quickStart: /^## Quick Start/mi|/^## Getting Started/mi|/^## Installation/mi,
+  quickStart: (/^## Quick Start/mi|/^## Getting Started/mi|/^## Installation/mi),
   visualPreview: /^## Visual Preview/mi,
-  documentation: /^## Documentation/mi|/^## Docs/mi,
-  contributors: /^## Contributors/mi|/^## Contributing/mi|/^## How to Contribute/mi|/^## Contribute/mi,
-  license: /^## License/mi|/^## Licensing/mi,
-  tableOfContents: /^## Table of Contents/mi|/^## Contents/mi|/^## Index/mi|/^## TOC/mi,
+  documentation: (/^## Documentation/mi|/^## Docs/mi),
+  contributors: (/^## Contributors/mi|/^## Contributing/mi|/^## How to Contribute/mi|/^## Contribute/mi),
+  license: (/^## License/mi|/^## Licensing/mi),
+  tableOfContents: (/^## Table of Contents/mi|/^## Contents/mi|/^## Index/mi|/^## TOC/mi),
 
   // Problem/Solution format within What & Why
   problemStatement: /\*\*The Problem:\*\*/mi,
