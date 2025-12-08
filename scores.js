@@ -2,7 +2,7 @@
 const scores = {
   title: 15,
   tagline: 5,
-  badges: 2,
+  badge: 2,
   whatAndWhy: 15,
   quickStart: 10,
   visualPreview: 5,
@@ -28,15 +28,18 @@ const scores = {
 const calculateScore = (analysisResults) => {
   let totalScore = 0;
   let missingSections = [];
+  let sectionsToRemove = [];
   for (const [section, present] of Object.entries(analysisResults)) {
     if (present && scores[section]) {
       totalScore += scores[section];
+      if (scores[section] < 0) {
+        sectionsToRemove.push(section);
+      }
     } else if (!present && scores[section] && scores[section] > 0) {
       missingSections.push(section);
     }
   }
-  return { totalScore: Math.min(totalScore, 100), missingSections }; // Cap score at 100
+  return { totalScore: Math.max(0, Math.min(totalScore, 100)), missingSections, sectionsToRemove }; // Cap score between 0 and 100
 };
 
-export { scores };
-export default calculateScore;
+export { scores, calculateScore };

@@ -2,6 +2,8 @@
 
 import fs from 'fs';
 import { Command } from 'commander';
+import regexPatterns from './regex.js';
+import { calculateScore } from './scores.js';
 const { default: pkg } = await import('./package.json', { with: { type: "json" } });
 const version = pkg.version;
 
@@ -32,7 +34,32 @@ program.command('analyze')
   .argument('<file>', 'path to the README file')
   .action((filePath) => {
     console.log(`Analyzing README file: ${filePath}`);
-    // TODO: Implement analysis logic here
+
+    const readmeContent = readFile(filePath);
+    const analysisResults = {};
+
+    // Check for each section using regex patterns
+    for (const [section, pattern] of Object.entries(regexPatterns)) {
+      analysisResults[section] = readmeContent.match(pattern) !== null;
+    }
+
+    // Calculate score
+    const { totalScore, missingSections, sectionsToRemove } = calculateScore(analysisResults);
+
+    console.log('--------------------------------\n');
+    // Output results
+    console.log(`Total Score: ${totalScore}/100\n`);
+    if (missingSections.length > 0) {
+      console.log('Missing Sections:');
+      missingSections.forEach(section => console.log(`- ${section}`));
+    } else {
+      console.log('All sections are present!');
+    }
+    console.log('--------------------------------');
+    if (sectionsToRemove.length > 0) {
+      console.log('Sections that should be removed:');
+      sectionsToRemove.forEach(section => console.log(`- ${section}`));
+    }
   });
 
 // Parse the command-line arguments
