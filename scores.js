@@ -25,7 +25,7 @@ const calculateScore = (analysisResults) => {
   /**
  * Calculate total score based on analysis results
  * @param {Object} analysisResults - Object where keys are section names and values are booleans indicating presence
- * @returns {Object} Object containing totalScore (capped at 100) and missingCategories array
+ * @returns {Object} Object containing totalScore (capped at 100) and missingSections array
  */
   let totalScore = 0;
   let missingSections = [];
