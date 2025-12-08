@@ -28,14 +28,18 @@ const scores = {
 const calculateScore = (analysisResults) => {
   let totalScore = 0;
   let missingSections = [];
+  let needToRemove = [];
   for (const [section, present] of Object.entries(analysisResults)) {
     if (present && scores[section]) {
       totalScore += scores[section];
+      if (scores[section] < 0) {
+        needToRemove.push(section);
+      }
     } else if (!present && scores[section] && scores[section] > 0) {
       missingSections.push(section);
     }
   }
-  return { totalScore: Math.min(totalScore, 100), missingSections }; // Cap score at 100
+  return { totalScore: Math.min(totalScore, 100), missingSections, needToRemove }; // Cap score at 100
 };
 
 export { scores };

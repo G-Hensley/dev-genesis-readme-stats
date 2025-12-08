@@ -13,12 +13,12 @@ const regexPatterns = {
 
   // Specific sections
   whatAndWhy: /^## What & Why/mi,
-  quickStart: (/^## Quick Start/mi|/^## Getting Started/mi|/^## Installation/mi),
+  quickStart: /^## (Quick Start|Getting Started|Installation)/mi,
   visualPreview: /^## Visual Preview/mi,
-  documentation: (/^## Documentation/mi|/^## Docs/mi),
-  contributors: (/^## Contributors/mi|/^## Contributing/mi|/^## How to Contribute/mi|/^## Contribute/mi),
+  documentation: /^## (Documentation|Docs)/mi,
+  contributors: /^## (Contributors|Contributing|How to Contribute|Contribute)/mi,
   license: /^## (License|Licensing)/mi,
-  tableOfContents: (/^## Table of Contents/mi|/^## Contents/mi|/^## Index/mi|/^## TOC/mi),
+  tableOfContents: /^## (Table of Contents|Contents|Index|TOC)/mi,
 
   // Problem/Solution format within What & Why
   problemStatement: /\*\*The Problem:\*\*/mi,
