@@ -28,7 +28,7 @@ const regexPatterns = {
 
   // Problem/Solution format within What & Why
   problemStatement: /\*\*The Problem:\*\*/mi,
-  solutionStatement: /\*\*(Our )?Solution:\*\*/mi,
+  solutionStatement: /\*\*(?:Our )?Solution:\*\*/mi,
 
   // Code blocks (fenced with triple backticks)
   codeBlock: /```[\s\S]*?```/g,
