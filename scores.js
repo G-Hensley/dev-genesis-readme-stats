@@ -13,7 +13,7 @@ const scores = {
   problemStatement: 5,
   solutionStatement: 5,
   codeBlocks: 5,
-  images: 5,
+  image: 5,
   wikiLink: 5,
   licenseLink: 3,
   htmlComment: -10,
@@ -36,7 +36,7 @@ const calculateScore = (analysisResults) => {
       missingSections.push(section);
     }
   }
-  return Math.min(totalScore, 100), missingSections; // Cap score at 100
+  return { totalScore: Math.min(totalScore, 100), missingSections }; // Cap score at 100
 };
 
 export { scores };
