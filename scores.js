@@ -1,0 +1,42 @@
+// Scores assigned to each README section or element
+const scores = {
+  title: 15,
+  tagline: 5,
+  badges: 2,
+  whatAndWhy: 15,
+  quickStart: 10,
+  visualPreview: 5,
+  documentation: 5,
+  contributors: 5,
+  license: 5,
+  tableOfContents: 5,
+  problemStatement: 5,
+  solutionStatement: 5,
+  codeBlock: 5,
+  image: 5,
+  wikiLink: 5,
+  licenseLink: 3,
+  htmlComment: -10,
+  deleteInstruction: -10,
+}
+
+/**
+ * Calculate total score based on analysis results
+ * @param {Object} analysisResults - Object where keys are section names and values are booleans indicating presence
+ * @returns {Object} Object containing totalScore (capped at 100) and missingSections array
+ */
+const calculateScore = (analysisResults) => {
+  let totalScore = 0;
+  let missingSections = [];
+  for (const [section, present] of Object.entries(analysisResults)) {
+    if (present && scores[section]) {
+      totalScore += scores[section];
+    } else if (!present && scores[section] && scores[section] > 0) {
+      missingSections.push(section);
+    }
+  }
+  return { totalScore: Math.min(totalScore, 100), missingSections }; // Cap score at 100
+};
+
+export { scores };
+export default calculateScore;
