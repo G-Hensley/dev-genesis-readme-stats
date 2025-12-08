@@ -3,7 +3,7 @@
 import fs from 'fs';
 import { Command } from 'commander';
 import regexPatterns from './regex.js';
-import calculateScore from './scores.js';
+import { calculateScore } from './scores.js';
 const { default: pkg } = await import('./package.json', { with: { type: "json" } });
 const version = pkg.version;
 
