@@ -20,13 +20,12 @@ const scores = {
   deleteInstruction: -10,
 }
 
-// Function to calculate total score based on analysis results
-const calculateScore = (analysisResults) => {
-  /**
+/**
  * Calculate total score based on analysis results
  * @param {Object} analysisResults - Object where keys are section names and values are booleans indicating presence
  * @returns {Object} Object containing totalScore (capped at 100) and missingSections array
  */
+const calculateScore = (analysisResults) => {
   let totalScore = 0;
   let missingSections = [];
   for (const [section, present] of Object.entries(analysisResults)) {
