@@ -32,7 +32,7 @@ const regexPatterns = {
 
   // Code blocks (fenced with triple backticks)
   codeBlock: /```[\s\S]*?```/g,
-  codeBlockWithLang: /```(\w+)\n[\s\S]*?```/g,
+  codeBlockWithLang: /```(?:\w+)\n[\s\S]*?```/g,
 
   // Markdown images (for Visual Preview)
   image: /!\[.+?\]\(.+?\)/g,
