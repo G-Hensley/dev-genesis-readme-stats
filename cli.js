@@ -34,7 +34,7 @@ program.command('analyze')
   .argument('<file>', 'path to the README file')
   .action((filePath) => {
     console.log(`Analyzing README file: ${filePath}`);
-    // TODO: Implement analysis logic here
+
     const readmeContent = readFile(filePath);
     const analysisResults = {};
 
