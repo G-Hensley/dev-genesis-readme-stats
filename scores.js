@@ -24,12 +24,15 @@ const scores = {
 // Function to calculate total score based on analysis results
 const calculateScore = (analysisResults) => {
   let totalScore = 0;
+  let missingCategories = [];
   for (const [section, present] of Object.entries(analysisResults)) {
     if (present && scores[section]) {
       totalScore += scores[section];
+    } else if (!present && scores[section] && scores[section] > 0) {
+      missingCategories.push(section);
     }
   }
-  return Math.min(totalScore, 100); // Cap score at 100
+  return Math.min(totalScore, 100), missingCategories; // Cap score at 100
 };
 
 export default calculateScore;
