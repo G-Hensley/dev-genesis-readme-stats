@@ -3,7 +3,7 @@
 import fs from 'fs';
 import { Command } from 'commander';
 import regexPatterns from './regex.js';
-import score from './scores.js';
+import calculateScore from './scores.js';
 const { default: pkg } = await import('./package.json', { with: { type: "json" } });
 const version = pkg.version;
 
@@ -44,7 +44,7 @@ program.command('analyze')
     }
 
     // Calculate score
-    const { totalScore, missingSections, needToRemove } = score(analysisResults);
+    const { totalScore, missingSections, needToRemove } = calculateScore(analysisResults);
 
     console.log('--------------------------------\n');
     // Output results
