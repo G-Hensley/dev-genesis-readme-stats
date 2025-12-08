@@ -3,7 +3,6 @@ const scores = {
   title: 15,
   tagline: 5,
   badges: 2,
-  horizontalRule: 1,
   whatAndWhy: 15,
   quickStart: 10,
   visualPreview: 5,
