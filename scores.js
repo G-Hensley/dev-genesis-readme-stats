@@ -12,7 +12,7 @@ const scores = {
   tableOfContents: 5,
   problemStatement: 5,
   solutionStatement: 5,
-  codeBlocks: 5,
+  codeBlock: 5,
   image: 5,
   wikiLink: 5,
   licenseLink: 3,
