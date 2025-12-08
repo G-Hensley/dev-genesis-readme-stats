@@ -23,7 +23,7 @@ const regexPatterns = {
   visualPreview: /^## Visual Preview/mi,
   documentation: (/^## Documentation/mi|/^## Docs/mi),
   contributors: (/^## Contributors/mi|/^## Contributing/mi|/^## How to Contribute/mi|/^## Contribute/mi),
-  license: (/^## License/mi|/^## Licensing/mi),
+  license: /^## (License|Licensing)/mi,
   tableOfContents: (/^## Table of Contents/mi|/^## Contents/mi|/^## Index/mi|/^## TOC/mi),
 
   // Problem/Solution format within What & Why
