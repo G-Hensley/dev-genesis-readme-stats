@@ -32,7 +32,7 @@ program.command('analyze')
   .argument('<file>', 'path to the README file')
   .action((filePath) => {
     console.log(`Analyzing README file: ${filePath}`);
-    // TODO: Add analysis logic here
+    // TODO: Implement analysis logic here
   });
 
 // Parse the command-line arguments
