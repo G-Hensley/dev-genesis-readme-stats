@@ -40,4 +40,5 @@ const calculateScore = (analysisResults) => {
   return Math.min(totalScore, 100), missingCategories; // Cap score at 100
 };
 
+export { scores };
 export default calculateScore;
