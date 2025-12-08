@@ -44,7 +44,7 @@ program.command('analyze')
     }
 
     // Calculate score
-    const { totalScore, missingSections, needToRemove } = calculateScore(analysisResults);
+    const { totalScore, missingSections, sectionsToRemove } = calculateScore(analysisResults);
 
     console.log('--------------------------------\n');
     // Output results
@@ -56,9 +56,9 @@ program.command('analyze')
       console.log('All sections are present!');
     }
     console.log('--------------------------------');
-    if (needToRemove.length > 0) {
+    if (sectionsToRemove.length > 0) {
       console.log('Sections that should be removed:');
-      needToRemove.forEach(section => console.log(`- ${section}`));
+      sectionsToRemove.forEach(section => console.log(`- ${section}`));
     }
   });
 
