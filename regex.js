@@ -11,12 +11,6 @@ const regexPatterns = {
   badge: /!\[.+?\]\(.+?\)/g,
   badgeShieldsIo: /!\[.+?\]\(https:\/\/img\.shields\.io\/.+?\)/g,
 
-  // Horizontal rule separator
-  horizontalRule: /^(-{3,}|\*{3,}|_{3,})$/m,
-
-  // H2 section headings
-  h2Section: /^## .+/gm,
-
   // Specific sections
   whatAndWhy: /^## What & Why/mi,
   quickStart: (/^## Quick Start/mi|/^## Getting Started/mi|/^## Installation/mi),
@@ -37,12 +31,7 @@ const regexPatterns = {
   // Markdown images (for Visual Preview)
   image: /!\[.+?\]\(.+?\)/g,
 
-  // Markdown tables (pipe-delimited with header separator)
-  table: /\|.+\|[\r\n]+\|[-:\s|]+\|[\r\n]+(\|.+\|[\r\n]*)*/g,
-  tableRow: /^\|.+\|$/gm,
-
   // Links
-  markdownLink: /\[.+?\]\(.+?\)/g,
   wikiLink: /\[.+?\]\(https:\/\/github\.com\/.+?\/wiki.+?\)/g,
 
   // License reference
