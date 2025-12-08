@@ -5,7 +5,7 @@ const regexPatterns = {
   title: /^# .+/,
 
   // Tagline - bold text (typically after title, before badges)
-  tagline: /^\*\*.+\*\*$/mi,
+  tagline: /^\*\*[^\n]+\*\*$/m,
 
   // Badges - markdown image syntax, typically shields.io
   badge: /!\[.+?\]\(.+?\)/g,
