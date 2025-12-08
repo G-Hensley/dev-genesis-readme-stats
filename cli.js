@@ -40,7 +40,7 @@ program.command('analyze')
 
     // Check for each section using regex patterns
     for (const [section, pattern] of Object.entries(regexPatterns)) {
-      analysisResults[section] = pattern.test(readmeContent);
+      analysisResults[section] = readmeContent.match(pattern) !== null;
     }
 
     // Calculate score
