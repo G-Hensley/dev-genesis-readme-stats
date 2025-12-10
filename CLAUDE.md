@@ -15,7 +15,7 @@ This project was initialized with [dev-genesis](https://github.com/G-Hensley/dev
 | Category | Technology |
 |----------|------------|
 | Language | JavaScript (Node.js, ES Modules) |
-| CLI Framework | Commander.js v14 |
+| CLI Framework | Commander.js v14.x |
 | Terminal Styling | Chalk v5 |
 | Package Manager | pnpm |
 | CI/CD | GitHub Actions |
@@ -36,7 +36,7 @@ Modular CLI architecture with separation of concerns - each module handles a spe
 ```
 /
 ├── cli.js            # Main entry point - CLI logic and orchestration
-├── regex.js          # Section detection patterns (16+ patterns)
+├── regex.js          # Section detection patterns
 ├── scores.js         # Scoring logic and point values
 ├── suggestions.js    # Actionable suggestions for missing sections
 ├── .claude/          # Claude Code configuration and commands
@@ -51,7 +51,7 @@ Modular CLI architecture with separation of concerns - each module handles a spe
 | File | Purpose |
 |------|---------|
 | `cli.js` | Main CLI entry point - handles argument parsing, file reading, analysis orchestration, and colored console output |
-| `regex.js` | Contains 16+ regex patterns for detecting README sections (title, badges, documentation, license, etc.) |
+| `regex.js` | Contains regex patterns for detecting README sections (title, badges, documentation, license, etc.) |
 | `scores.js` | Scoring system that calculates total score and identifies missing sections based on point values |
 | `suggestions.js` | Actionable, context-specific suggestions for each missing README element |
 | `project-spec.md` | Complete project specification with requirements, success criteria, and scope |
@@ -93,11 +93,11 @@ pnpm install
 ### Testing Locally
 
 ```bash
-# Test against the project's own README
-./cli.js analyze README.md
-
-# Test against the template
+# Test against the template README
 ./cli.js analyze README.TEMPLATE.md
+
+# Test against any README file
+./cli.js analyze /path/to/your/README.md
 ```
 
 ## Claude Code Commands
@@ -124,13 +124,25 @@ The analyzer uses a point-based scoring system:
 |---------|--------|
 | Title | 15 |
 | What & Why (Description) | 15 |
-| Quick Start | 10 |
-| Tagline, Visual Preview, Documentation, Contributors, License, TOC, Problem/Solution Statements, Code Block, Image, Wiki Link | 5 each |
+| Quick Start (or Getting Started/Installation) | 10 |
+| Tagline | 5 |
+| Visual Preview | 5 |
+| Documentation (or Docs) | 5 |
+| Contributors (or Contributing) | 5 |
+| License | 5 |
+| Table of Contents | 5 |
+| Problem Statement | 5 |
+| Solution Statement | 5 |
+| Code Block | 5 |
+| Image | 5 |
+| Wiki Link | 5 |
 | License Link | 3 |
-| Badges | 2 each |
+| Badges (shields.io) | 2 each |
 | **Penalties** | |
 | HTML comments present | -10 |
 | DELETE instructions present | -10 |
+
+> **Note:** For the canonical list of scored sections, see [scores.js](scores.js).
 
 **Score thresholds:**
 - Green (80+): Excellent README
@@ -144,7 +156,7 @@ To add a new section pattern:
 1. Add the regex pattern to `regex.js`
 2. Add the point value to `scores.js`
 3. Add an actionable suggestion to `suggestions.js`
-4. Test with `./cli.js analyze README.md`
+4. Test with `./cli.js analyze README.TEMPLATE.md`
 
 ## Known Areas for Improvement
 
