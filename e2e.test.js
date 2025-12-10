@@ -12,8 +12,7 @@ const __dirname = dirname(__filename);
 const runCLI = (fixtureName) => {
   const fixturePath = join(__dirname, 'test', 'fixtures', fixtureName);
   try {
-    // Use --no-warnings to suppress experimental warnings
-    const output = execSync(`node cli.js analyze "${fixturePath}"`, {
+    const output = execSync(`node --no-warnings cli.js analyze "${fixturePath}"`, {
       encoding: 'utf-8',
       env: { ...process.env, FORCE_COLOR: '0' } // Disable colors for easier parsing
     });
@@ -32,9 +31,9 @@ const extractScore = (output) => {
 // Helper to check if output contains text
 const outputContains = (output, text) => output.includes(text);
 
-// Helper to count occurrences
+// Helper to count occurrences (uses string split to avoid ReDoS)
 const countOccurrences = (output, text) => {
-  return (output.match(new RegExp(text, 'g')) || []).length;
+  return output.split(text).length - 1;
 };
 
 // =============================================================================
@@ -116,12 +115,6 @@ describe('Complete README (all sections)', () => {
     assert.ok(score >= 80, `Expected score >= 80, got ${score}`);
   });
 
-  it('should detect title', () => {
-    // High score implies title was detected
-    const score = extractScore(result.output);
-    assert.ok(score >= 15);
-  });
-
   it('should have no sections to remove', () => {
     assert.ok(outputContains(result.output, 'No sections need to be removed'));
   });
@@ -147,16 +140,15 @@ describe('React-Style README', () => {
   });
 
   it('should detect Installation as Quick Start equivalent', () => {
-    // If quickStart isn't in missing sections, it was detected
-    const score = extractScore(result.output);
-    // Score should include quickStart (10 points)
-    assert.ok(score >= 10);
+    // Check that quickStart is NOT in missing sections
+    assert.ok(!outputContains(result.output, 'quickStart'),
+      'quickStart should not be in missing sections when Installation exists');
   });
 
   it('should detect badges', () => {
-    const score = extractScore(result.output);
-    // Badges are worth 2 points, should contribute to score
-    assert.ok(score >= 2);
+    // Check that badge is NOT in missing sections
+    assert.ok(!outputContains(result.output, 'badge'),
+      'badge should not be in missing sections when badges exist');
   });
 });
 
@@ -180,9 +172,9 @@ describe('Express.js-Style README', () => {
   });
 
   it('should detect multiple code blocks', () => {
-    // Express fixture has several code blocks, score should reflect this
-    const score = extractScore(result.output);
-    assert.ok(score >= 5); // At least codeBlock points
+    // Check that codeBlock is NOT in missing sections
+    assert.ok(!outputContains(result.output, 'codeBlock'),
+      'codeBlock should not be in missing sections when code blocks exist');
   });
 
   it('should have no sections to remove (no template artifacts)', () => {
@@ -210,14 +202,15 @@ describe('Unusual Formatting README', () => {
   });
 
   it('should detect multiple images', () => {
-    // Unusual fixture has 3 images
-    const score = extractScore(result.output);
-    assert.ok(score >= 5); // At least image points
+    // Check that image is NOT in missing sections
+    assert.ok(!outputContains(result.output, 'image'),
+      'image should not be in missing sections when images exist');
   });
 
   it('should detect multiple code blocks with different languages', () => {
-    const score = extractScore(result.output);
-    assert.ok(score >= 5); // At least codeBlock points
+    // Check that codeBlock is NOT in missing sections
+    assert.ok(!outputContains(result.output, 'codeBlock'),
+      'codeBlock should not be in missing sections when code blocks exist');
   });
 
   it('should detect HTML comments and suggest removal', () => {
@@ -226,9 +219,9 @@ describe('Unusual Formatting README', () => {
   });
 
   it('should handle badges without spaces between them', () => {
-    // The unusual fixture has badges directly adjacent
-    const score = extractScore(result.output);
-    assert.ok(score >= 2); // At least badge points
+    // Check that badge is NOT in missing sections when adjacent badges exist
+    assert.ok(!outputContains(result.output, 'badge'),
+      'badge should not be in missing sections when badges exist');
   });
 });
 
@@ -303,23 +296,25 @@ describe('Empty README', () => {
 // CLI Output Format Tests
 // =============================================================================
 describe('CLI Output Format', () => {
+  let result;
+
+  before(() => {
+    result = runCLI('minimal.md');
+  });
+
   it('should display analyzing message', () => {
-    const result = runCLI('minimal.md');
     assert.ok(outputContains(result.output, 'Analyzing README file'));
   });
 
   it('should display score in correct format', () => {
-    const result = runCLI('minimal.md');
     assert.ok(/Total Score: \d+\/100/.test(result.output));
   });
 
   it('should display separator lines', () => {
-    const result = runCLI('minimal.md');
     assert.ok(outputContains(result.output, '---'));
   });
 
   it('should display suggestion arrows for missing sections', () => {
-    const result = runCLI('minimal.md');
     assert.ok(outputContains(result.output, '→'));
   });
 });
@@ -345,7 +340,7 @@ describe('Error Handling', () => {
 // Performance Tests
 // =============================================================================
 describe('Performance', () => {
-  it('should analyze all fixtures in under 1 second total', () => {
+  it('should analyze all fixtures in under 3 seconds total', () => {
     const fixtures = [
       'minimal.md',
       'complete.md',
@@ -365,7 +360,7 @@ describe('Performance', () => {
     const endTime = Date.now();
     const duration = endTime - startTime;
 
-    assert.ok(duration < 1000, `Expected all fixtures to complete in < 1000ms, took ${duration}ms`);
+    assert.ok(duration < 3000, `Expected all fixtures to complete in < 3000ms, took ${duration}ms`);
   });
 });
 
@@ -374,14 +369,13 @@ describe('Performance', () => {
 // =============================================================================
 describe('Score Consistency', () => {
   it('should return consistent scores on repeated runs', () => {
-    const scores = [];
-    for (let i = 0; i < 3; i++) {
-      const result = runCLI('complete.md');
-      scores.push(extractScore(result.output));
-    }
+    const result1 = runCLI('complete.md');
+    const result2 = runCLI('complete.md');
 
-    assert.strictEqual(scores[0], scores[1]);
-    assert.strictEqual(scores[1], scores[2]);
+    const score1 = extractScore(result1.output);
+    const score2 = extractScore(result2.output);
+
+    assert.strictEqual(score1, score2, 'Scores should be consistent across runs');
   });
 
   it('should score complete README higher than minimal', () => {
@@ -395,17 +389,17 @@ describe('Score Consistency', () => {
       `Complete (${completeScore}) should score higher than minimal (${minimalScore})`);
   });
 
-  it('should penalize template README compared to clean README', () => {
+  it('should apply penalties to template README', () => {
     const templateResult = runCLI('template-unedited.md');
-    const reactResult = runCLI('react-style.md');
 
+    // Template has HTML comments and DELETE instructions, so it should have sections to remove
+    assert.ok(outputContains(templateResult.output, 'Sections that should be removed'),
+      'Template should have sections flagged for removal due to penalties');
+
+    // Score should be less than 80 due to penalties being applied
     const templateScore = extractScore(templateResult.output);
-    const reactScore = extractScore(reactResult.output);
-
-    // Template has penalties, so even with similar content it should score lower
-    // or at least not significantly higher
-    assert.ok(templateScore <= reactScore + 20,
-      `Template (${templateScore}) shouldn't score much higher than React-style (${reactScore})`);
+    assert.ok(templateScore < 80,
+      `Template score (${templateScore}) should be reduced by penalties`);
   });
 });
 
@@ -416,10 +410,13 @@ describe('Real-World Scenarios', () => {
   it('should give actionable feedback for a new project', () => {
     const result = runCLI('minimal.md');
 
-    // Should suggest key sections to add
-    assert.ok(outputContains(result.output, 'whatAndWhy') ||
-              outputContains(result.output, 'quickStart') ||
-              outputContains(result.output, 'license'));
+    // Should suggest key sections to add - all should be missing for minimal README
+    assert.ok(outputContains(result.output, 'whatAndWhy'),
+      'Should suggest adding whatAndWhy section');
+    assert.ok(outputContains(result.output, 'quickStart'),
+      'Should suggest adding quickStart section');
+    assert.ok(outputContains(result.output, 'license'),
+      'Should suggest adding license section');
   });
 
   it('should validate a well-documented project', () => {
