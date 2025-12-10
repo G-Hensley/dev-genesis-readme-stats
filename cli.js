@@ -4,6 +4,7 @@ import fs from 'fs';
 import { Command } from 'commander';
 import regexPatterns from './regex.js';
 import { calculateScore } from './scores.js';
+import suggestions from './suggestions.js';
 import chalk from 'chalk';
 const { default: pkg } = await import('./package.json', { with: { type: "json" } });
 const version = pkg.version;
@@ -59,7 +60,12 @@ program.command('analyze')
 
     if (missingSections.length > 0) {
       console.log(chalk.red('Missing Sections:'));
-      missingSections.forEach(section => console.log(`❌ ${section}`));
+      missingSections.forEach(section => {
+        console.log(`❌ ${section}`);
+        if (suggestions[section]) {
+          console.log(chalk.dim(`   → ${suggestions[section]}`));
+        }
+      });
     } else {
       console.log(chalk.green('All sections are present!'));
     }
