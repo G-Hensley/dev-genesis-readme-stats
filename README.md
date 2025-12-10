@@ -159,7 +159,7 @@ cd dev-genesis-readme-stats
 pnpm install
 
 # Run locally
-./cli.js analyze README.md
+node cli.js analyze README.md
 
 # Run tests
 pnpm test
@@ -170,7 +170,7 @@ pnpm test
 1. Add the regex pattern to `regex.js`
 2. Add the point value to `scores.js`
 3. Add a suggestion to `suggestions.js`
-4. Test with `./cli.js analyze README.md`
+4. Test with `node cli.js analyze README.md`
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 

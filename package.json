@@ -18,7 +18,7 @@
   "packageManager": "pnpm@10.24.0",
   "type": "module",
   "bin": {
-    "dev-genesis-readme-stats": "./cli.js"
+    "readme-stats": "./cli.js"
   },
   "dependencies": {
     "chalk": "^5.6.2",
