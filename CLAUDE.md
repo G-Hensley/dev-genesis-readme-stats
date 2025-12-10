@@ -137,7 +137,7 @@ The analyzer uses a point-based scoring system:
 | Image | 5 |
 | Wiki Link | 5 |
 | License Link | 3 |
-| Badges (shields.io) | 2 each |
+| Badges (shields.io) | 2 |
 | **Penalties** | |
 | HTML comments present | -10 |
 | DELETE instructions present | -10 |
