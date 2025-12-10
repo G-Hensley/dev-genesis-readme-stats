@@ -1,24 +1,46 @@
 {
   "name": "readme-stats",
   "version": "1.0.0",
-  "description": "A tool to generate README stats for GitHub repositories",
-  "main": "index.js",
-  "scripts": {
-    "test": "node --test *.test.js"
-  },
+  "description": "A zero-config CLI tool that analyzes README files for completeness and quality, scoring them against best practices",
   "keywords": [
-    "github",
     "readme",
-    "stats",
-    "repository",
-    "tool"
+    "documentation",
+    "cli",
+    "analyzer",
+    "linter",
+    "quality",
+    "score",
+    "best-practices",
+    "markdown",
+    "github",
+    "docs",
+    "completeness"
   ],
   "author": "Gavin Hensley",
   "license": "MIT",
-  "packageManager": "pnpm@10.24.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/G-Hensley/dev-genesis-readme-stats.git"
+  },
+  "bugs": {
+    "url": "https://github.com/G-Hensley/dev-genesis-readme-stats/issues"
+  },
+  "homepage": "https://github.com/G-Hensley/dev-genesis-readme-stats#readme",
   "type": "module",
   "bin": {
     "readme-stats": "./cli.js"
+  },
+  "files": [
+    "cli.js",
+    "regex.js",
+    "scores.js",
+    "suggestions.js"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test *.test.js"
   },
   "dependencies": {
     "chalk": "^5.6.2",
