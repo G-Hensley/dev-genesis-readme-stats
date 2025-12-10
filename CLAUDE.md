@@ -1,94 +1,60 @@
 # Project Intelligence
 
-<!--
-================================================================================
-CLAUDE.md - Project Context for Claude Code
-================================================================================
-
-This file provides Claude Code with essential context about your project.
-Claude reads this file automatically when you start a session.
-
-CUSTOMIZATION CHECKLIST:
-[ ] Fill in "About This Project" with your project details
-[ ] Update "Tech Stack" with your actual technologies
-[ ] Add key architectural patterns and decisions
-[ ] List important files and directories
-[ ] Add project-specific commands and workflows
-[ ] Delete this instruction block when done
-
-================================================================================
--->
-
 ## About This Project
-
-<!--
-CUSTOMIZE THIS SECTION - Describe your project so Claude understands what you're building.
-
-Example:
-This is a Next.js e-commerce application that allows small businesses to
-set up online stores. We use TypeScript, Prisma ORM with PostgreSQL, and
-Tailwind CSS for styling. The app follows a feature-based folder structure.
--->
 
 This project was initialized with [dev-genesis](https://github.com/G-Hensley/dev-genesis).
 
-**Project Name:** [Your project name]
+**Project Name:** readme-stats
 
-**Purpose:** [One paragraph describing what this project does and who it's for]
+**Purpose:** A zero-config CLI tool that analyzes README files for completeness and quality. It scores READMEs against best practices (0-100 scale), identifies missing critical sections, and provides actionable suggestions for improvement. Built for developers who want to ensure their documentation is complete before publishing projects.
 
-**Current Status:** [Planning / In Development / Beta / Production]
+**Current Status:** In Development
 
 ## Tech Stack
 
-<!--
-CUSTOMIZE THIS SECTION - List your actual technologies.
-Delete any that don't apply.
--->
-
 | Category | Technology |
 |----------|------------|
-| Language | [e.g., TypeScript, Python, Go, Rust] |
-| Framework | [e.g., Next.js, FastAPI, Gin, Actix] |
-| Database | [e.g., PostgreSQL, MongoDB, SQLite] |
-| ORM | [e.g., Prisma, SQLAlchemy, GORM] |
-| Styling | [e.g., Tailwind CSS, styled-components] |
-| Testing | [e.g., Jest, pytest, go test] |
+| Language | JavaScript (Node.js, ES Modules) |
+| CLI Framework | Commander.js v14.x |
+| Terminal Styling | Chalk v5 |
+| Package Manager | pnpm |
 | CI/CD | GitHub Actions |
 
 ## Architecture
 
-<!--
-CUSTOMIZE THIS SECTION - Describe your project's architecture.
--->
-
 ### Pattern
-[e.g., MVC, Clean Architecture, Feature-based, Microservices]
+Modular CLI architecture with separation of concerns - each module handles a specific aspect of the analysis pipeline.
 
 ### Key Design Decisions
-- [Decision 1 and why]
-- [Decision 2 and why]
-- [Decision 3 and why]
+- **Single-file modules**: Each concern (regex patterns, scoring, suggestions) is in its own file for maintainability
+- **Zero dependencies beyond CLI essentials**: Only Commander (CLI parsing) and Chalk (colors) - no bloat
+- **Regex-based detection**: Flexible pattern matching allows easy addition of new section types
+- **Point-based scoring**: Weighted scoring system where different sections have different importance levels
 
 ### Directory Structure
 
 ```
-src/
-├── [folder]/     # [Purpose]
-├── [folder]/     # [Purpose]
-└── [folder]/     # [Purpose]
+/
+├── cli.js            # Main entry point - CLI logic and orchestration
+├── regex.js          # Section detection patterns
+├── scores.js         # Scoring logic and point values
+├── suggestions.js    # Actionable suggestions for missing sections
+├── .claude/          # Claude Code configuration and commands
+├── .github/          # GitHub workflows, templates, and settings
+├── docs/             # Documentation (getting started, workflows)
+├── prompts/          # AI planning prompts
+└── scripts/          # Setup scripts (unix/windows)
 ```
 
 ## Key Files
 
-<!--
-List the most important files Claude should know about.
--->
-
 | File | Purpose |
 |------|---------|
-| `[path/to/file]` | [What this file does] |
-| `[path/to/file]` | [What this file does] |
-| `[path/to/file]` | [What this file does] |
+| `cli.js` | Main CLI entry point - handles argument parsing, file reading, analysis orchestration, and colored console output |
+| `regex.js` | Contains regex patterns for detecting README sections (title, badges, documentation, license, etc.) |
+| `scores.js` | Scoring system that calculates total score and identifies missing sections based on point values |
+| `suggestions.js` | Actionable, context-specific suggestions for each missing README element |
+| `project-spec.md` | Complete project specification with requirements, success criteria, and scope |
 
 ## Development Guidelines
 
@@ -104,54 +70,34 @@ List the most important files Claude should know about.
 - All PRs require review before merging
 
 ### Security
-- Never hardcode secrets or credentials
-- Validate and sanitize all user input
-- Use parameterized queries for database operations
-- Follow OWASP guidelines
+- Validate file paths to prevent directory traversal
+- Handle file read errors gracefully
+- Never execute user-provided content
 
 ## Common Tasks
-
-<!--
-CUSTOMIZE THIS SECTION - Add commands specific to your project.
--->
 
 ### Development
 
 ```bash
 # Install dependencies
-[npm install / pip install -r requirements.txt / go mod download]
+pnpm install
 
-# Start development server
-[npm run dev / python main.py / go run .]
+# Run the CLI analyzer
+./cli.js analyze <path-to-readme>
 
-# Run tests
-[npm test / pytest / go test ./...]
-
-# Run linting
-[npm run lint / ruff check . / golangci-lint run]
+# Example usage
+./cli.js analyze README.md
+./cli.js analyze ../my-project/README.md
 ```
 
-### Database
+### Testing Locally
 
 ```bash
-# Run migrations
-[npx prisma migrate dev / alembic upgrade head]
+# Test against the template README
+./cli.js analyze README.TEMPLATE.md
 
-# Generate types/models
-[npx prisma generate]
-
-# Seed database
-[npm run db:seed / python seed.py]
-```
-
-### Deployment
-
-```bash
-# Build for production
-[npm run build / go build -o app .]
-
-# Run production build locally
-[npm start / ./app]
+# Test against any README file
+./cli.js analyze /path/to/your/README.md
 ```
 
 ## Claude Code Commands
@@ -170,92 +116,57 @@ This project includes custom Claude Code commands in `.claude/commands/`:
 | `/test-coverage-check` | Test coverage analysis |
 | `/documentation-review` | Documentation completeness check |
 
-## Testing Strategy
+## Scoring System
 
-<!--
-CUSTOMIZE THIS SECTION - Describe your testing approach.
--->
+The analyzer uses a point-based scoring system:
 
-| Type | Tool | Location |
-|------|------|----------|
-| Unit Tests | [Jest/pytest/etc.] | `[tests/unit/]` |
-| Integration Tests | [Jest/pytest/etc.] | `[tests/integration/]` |
-| E2E Tests | [Playwright/Cypress/etc.] | `[tests/e2e/]` |
+| Section | Points |
+|---------|--------|
+| Title | 15 |
+| What & Why (Description) | 15 |
+| Quick Start (or Getting Started/Installation) | 10 |
+| Tagline | 5 |
+| Visual Preview | 5 |
+| Documentation (or Docs) | 5 |
+| Contributors (or Contributing) | 5 |
+| License | 5 |
+| Table of Contents | 5 |
+| Problem Statement | 5 |
+| Solution Statement | 5 |
+| Code Block | 5 |
+| Image | 5 |
+| Wiki Link | 5 |
+| License Link | 3 |
+| Badges (shields.io) | 2 |
+| **Penalties** | |
+| HTML comments present | -10 |
+| DELETE instructions present | -10 |
 
-### Running Tests
+> **Note:** For the canonical list of scored sections, see [scores.js](scores.js).
 
-```bash
-# Run all tests
-[command]
+**Score thresholds:**
+- Green (80+): Excellent README
+- Yellow (50-79): Needs improvement
+- Red (<50): Missing critical sections
 
-# Run with coverage
-[command]
+## Adding New Section Detection
 
-# Run specific test file
-[command]
-```
+To add a new section pattern:
 
-## API Documentation
+1. Add the regex pattern to `regex.js`
+2. Add the point value to `scores.js`
+3. Add an actionable suggestion to `suggestions.js`
+4. Test with `./cli.js analyze README.TEMPLATE.md`
 
-<!--
-If your project has an API, describe it here.
-Delete this section if not applicable.
--->
+## Known Areas for Improvement
 
-### Base URL
-- Development: `http://localhost:[PORT]`
-- Production: `https://[your-domain.com]`
-
-### Authentication
-[Describe your auth method - JWT, API keys, OAuth, etc.]
-
-### Key Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/[resource]` | [Description] |
-| `POST` | `/api/[resource]` | [Description] |
-
-## Environment Variables
-
-<!--
-List required environment variables (without actual values).
--->
-
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `DATABASE_URL` | Database connection string | Yes |
-| `[VAR_NAME]` | [Description] | [Yes/No] |
-
-## Troubleshooting
-
-### Common Issues
-
-**Issue:** [Description]
-**Solution:** [How to fix]
-
-**Issue:** [Description]
-**Solution:** [How to fix]
+- No formal test suite yet (testing is manual)
+- Could add JSON output format for CI integration
+- Could add a `--fix` flag to auto-generate missing sections
 
 ## Resources
 
 - [Documentation](docs/)
 - [Contributing Guide](CONTRIBUTING.md)
 - [Security Policy](SECURITY.md)
-
----
-
-<!--
-================================================================================
-TIPS FOR EFFECTIVE CLAUDE.md FILES
-================================================================================
-
-1. Keep it updated - Outdated context leads to outdated suggestions
-2. Be specific - Generic descriptions produce generic help
-3. Include examples - Show Claude what good code looks like in your project
-4. Document decisions - Explain WHY you chose certain patterns
-5. List pain points - Tell Claude about known issues or areas needing work
-
-The more context you provide, the better Claude can assist you.
-================================================================================
--->
+- [Project Specification](project-spec.md)
