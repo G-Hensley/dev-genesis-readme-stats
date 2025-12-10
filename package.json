@@ -4,7 +4,7 @@
   "description": "A tool to generate README stats for GitHub repositories",
   "main": "index.js",
   "scripts": {
-    "test": "node --test regex.test.js"
+    "test": "node --test *.test.js"
   },
   "keywords": [
     "github",
