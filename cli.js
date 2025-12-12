@@ -9,20 +9,26 @@ import chalk from 'chalk';
 const { default: pkg } = await import('./package.json', { with: { type: "json" } });
 const version = pkg.version;
 
-// Check if colors should be disabled
+// Check if colors should be disabled based on environment
+// Precedence: NO_COLOR > FORCE_COLOR > TTY detection
 const shouldDisableColors = () => {
-  // Check for NO_COLOR environment variable (https://no-color.org/)
+  // 1. NO_COLOR environment variable always wins (https://no-color.org/)
   if (process.env.NO_COLOR !== undefined) {
     return true;
   }
-  // Check for non-TTY output (piped or redirected)
+  // 2. FORCE_COLOR forces colors even in non-TTY environments
+  if (process.env.FORCE_COLOR !== undefined && process.env.FORCE_COLOR !== '0' && process.env.FORCE_COLOR !== '') {
+    return false;
+  }
+  // 3. Check for non-TTY output (piped or redirected)
   if (!process.stdout.isTTY) {
     return true;
   }
   return false;
 };
 
-// Disable chalk colors if needed (before parsing args for --no-color)
+// Disable chalk colors at module load for env vars and TTY detection
+// (--no-color flag is handled separately in preAction hook after CLI parsing)
 if (shouldDisableColors()) {
   chalk.level = 0;
 }
