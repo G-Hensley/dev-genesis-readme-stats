@@ -9,9 +9,25 @@ import chalk from 'chalk';
 const { default: pkg } = await import('./package.json', { with: { type: "json" } });
 const version = pkg.version;
 
+// Check if content appears to be binary or contains invalid UTF-8
+const isBinaryContent = (content) => {
+  // Check for null bytes or UTF-8 replacement character in a single pass
+  return /[\x00\uFFFD]/.test(content);
+};
+
 const readFile = (filePath) => {
   try {
     const data = fs.readFileSync(filePath, 'utf-8');
+
+    // Check for binary content
+    if (isBinaryContent(data)) {
+      console.log(chalk.red(`\n❌ Invalid file: ${filePath}\n`));
+      console.log(chalk.yellow('The file appears to be binary or contains invalid UTF-8 content.\n'));
+      console.log('README files should be plain text files (typically .md or .txt).');
+      console.log(chalk.dim('\nMake sure you\'re pointing to a valid markdown or text file.\n'));
+      process.exit(1);
+    }
+
     return data;
   } catch (error) {
     if (error.code === 'ENOENT') {

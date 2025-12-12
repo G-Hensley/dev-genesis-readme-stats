@@ -325,7 +325,7 @@ describe('CLI Output Format', () => {
 describe('Error Handling', () => {
   it('should display helpful error and exit with code 1 when file not found', () => {
     try {
-      execSync('node cli.js analyze non-existent-file.md', {
+      execSync('node --no-warnings cli.js analyze non-existent-file.md', {
         encoding: 'utf-8',
         stdio: 'pipe',
         env: { ...process.env, FORCE_COLOR: '0' }
@@ -346,6 +346,27 @@ describe('Error Handling', () => {
       assert.ok(output.includes('Usage'), 'Should mention Usage section');
       assert.ok(output.includes('License'), 'Should mention License section');
       assert.ok(output.includes('Contributing'), 'Should mention Contributing section');
+    }
+  });
+
+  it('should display error and exit with code 1 for binary files', () => {
+    const binaryFixture = join(__dirname, 'test', 'fixtures', 'binary.bin');
+    try {
+      execSync(`node --no-warnings cli.js analyze "${binaryFixture}"`, {
+        encoding: 'utf-8',
+        stdio: 'pipe',
+        env: { ...process.env, FORCE_COLOR: '0' }
+      });
+      assert.fail('Should have thrown an error');
+    } catch (error) {
+      // Verify exit code
+      assert.strictEqual(error.status, 1, 'Should exit with code 1');
+
+      // Verify error message content
+      const output = error.stdout || error.stderr || '';
+      assert.ok(output.includes('Invalid file'), 'Should display invalid file message');
+      assert.ok(output.includes('binary') || output.includes('UTF-8'), 'Should mention binary or UTF-8');
+      assert.ok(output.includes('plain text'), 'Should mention plain text files');
     }
   });
 });
