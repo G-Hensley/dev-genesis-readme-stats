@@ -323,19 +323,7 @@ describe('CLI Output Format', () => {
 // Error Handling Tests
 // =============================================================================
 describe('Error Handling', () => {
-  it('should handle non-existent file gracefully', () => {
-    try {
-      execSync('node cli.js analyze non-existent-file.md', {
-        encoding: 'utf-8',
-        stdio: 'pipe'
-      });
-      assert.fail('Should have thrown an error');
-    } catch (error) {
-      assert.ok(error.status !== 0, 'Should exit with non-zero status');
-    }
-  });
-
-  it('should display helpful error message when file not found', () => {
+  it('should display helpful error and exit with code 1 when file not found', () => {
     try {
       execSync('node cli.js analyze non-existent-file.md', {
         encoding: 'utf-8',
@@ -344,6 +332,10 @@ describe('Error Handling', () => {
       });
       assert.fail('Should have thrown an error');
     } catch (error) {
+      // Verify exit code
+      assert.strictEqual(error.status, 1, 'Should exit with code 1');
+
+      // Verify helpful error message content
       const output = error.stdout || '';
       assert.ok(output.includes('File not found'), 'Should display file not found message');
       assert.ok(output.includes('Create one to get started'), 'Should suggest creating a README');
@@ -352,18 +344,6 @@ describe('Error Handling', () => {
       assert.ok(output.includes('Description'), 'Should mention Description section');
       assert.ok(output.includes('Installation'), 'Should mention Installation section');
       assert.ok(output.includes('License'), 'Should mention License section');
-    }
-  });
-
-  it('should exit with code 1 when file not found', () => {
-    try {
-      execSync('node cli.js analyze non-existent-file.md', {
-        encoding: 'utf-8',
-        stdio: 'pipe'
-      });
-      assert.fail('Should have thrown an error');
-    } catch (error) {
-      assert.strictEqual(error.status, 1, 'Should exit with code 1');
     }
   });
 });
