@@ -4,7 +4,7 @@
 
 [![npm version](https://img.shields.io/npm/v/readme-stats)](https://www.npmjs.com/package/readme-stats)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Node.js](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D20-brightgreen)](https://nodejs.org/)
 
 ## Table of Contents
 
