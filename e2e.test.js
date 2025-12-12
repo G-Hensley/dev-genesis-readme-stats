@@ -334,6 +334,38 @@ describe('Error Handling', () => {
       assert.ok(error.status !== 0, 'Should exit with non-zero status');
     }
   });
+
+  it('should display helpful error message when file not found', () => {
+    try {
+      execSync('node cli.js analyze non-existent-file.md', {
+        encoding: 'utf-8',
+        stdio: 'pipe',
+        env: { ...process.env, FORCE_COLOR: '0' }
+      });
+      assert.fail('Should have thrown an error');
+    } catch (error) {
+      const output = error.stdout || '';
+      assert.ok(output.includes('File not found'), 'Should display file not found message');
+      assert.ok(output.includes('Create one to get started'), 'Should suggest creating a README');
+      assert.ok(output.includes('A good README should include'), 'Should list recommended sections');
+      assert.ok(output.includes('Title'), 'Should mention Title section');
+      assert.ok(output.includes('Description'), 'Should mention Description section');
+      assert.ok(output.includes('Installation'), 'Should mention Installation section');
+      assert.ok(output.includes('License'), 'Should mention License section');
+    }
+  });
+
+  it('should exit with code 1 when file not found', () => {
+    try {
+      execSync('node cli.js analyze non-existent-file.md', {
+        encoding: 'utf-8',
+        stdio: 'pipe'
+      });
+      assert.fail('Should have thrown an error');
+    } catch (error) {
+      assert.strictEqual(error.status, 1, 'Should exit with code 1');
+    }
+  });
 });
 
 // =============================================================================
