@@ -12,7 +12,7 @@ const version = pkg.version;
 // Check if colors should be disabled based on environment
 // Full color control precedence (highest to lowest priority):
 //   1. --no-color CLI flag (handled later in preAction hook; overrides all below)
-//   2. NO_COLOR environment variable (disables colors)
+//   2. NO_COLOR environment variable (disables colors, takes precedence over FORCE_COLOR)
 //   3. FORCE_COLOR environment variable (forces colors even in non-TTY)
 //   4. TTY detection (auto-disable for piped/redirected output)
 // Note: This function runs at module load, before CLI parsing.
@@ -23,11 +23,11 @@ const shouldDisableColors = () => {
   if (process.env.NO_COLOR !== undefined) {
     return true;
   }
-  // 2. FORCE_COLOR forces colors even in non-TTY environments
+  // FORCE_COLOR forces colors even in non-TTY environments
   if (process.env.FORCE_COLOR !== undefined && process.env.FORCE_COLOR !== '0' && process.env.FORCE_COLOR !== '') {
     return false;
   }
-  // 3. Check for non-TTY output (piped or redirected)
+  // Non-TTY output (piped or redirected)
   if (!process.stdout.isTTY) {
     return true;
   }
