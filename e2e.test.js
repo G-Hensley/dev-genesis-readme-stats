@@ -325,7 +325,7 @@ describe('CLI Output Format', () => {
 describe('Error Handling', () => {
   it('should display helpful error and exit with code 1 when file not found', () => {
     try {
-      execSync('node cli.js analyze non-existent-file.md', {
+      execSync('node --no-warnings cli.js analyze non-existent-file.md', {
         encoding: 'utf-8',
         stdio: 'pipe',
         env: { ...process.env, FORCE_COLOR: '0' }
@@ -352,7 +352,7 @@ describe('Error Handling', () => {
   it('should display error and exit with code 1 for binary files', () => {
     const binaryFixture = join(__dirname, 'test', 'fixtures', 'binary.bin');
     try {
-      execSync(`node cli.js analyze "${binaryFixture}"`, {
+      execSync(`node --no-warnings cli.js analyze "${binaryFixture}"`, {
         encoding: 'utf-8',
         stdio: 'pipe',
         env: { ...process.env, FORCE_COLOR: '0' }
