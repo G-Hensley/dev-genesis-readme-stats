@@ -11,7 +11,7 @@ const version = pkg.version;
 
 // Check if colors should be disabled based on environment
 // Full color control precedence (highest to lowest priority):
-//   1. --no-color CLI flag (handled in preAction hook after parsing)
+//   1. --no-color CLI flag (handled later in preAction hook; overrides all below)
 //   2. NO_COLOR environment variable (disables colors)
 //   3. FORCE_COLOR environment variable (forces colors even in non-TTY)
 //   4. TTY detection (auto-disable for piped/redirected output)
