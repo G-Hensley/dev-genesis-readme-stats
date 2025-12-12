@@ -320,6 +320,45 @@ describe('CLI Output Format', () => {
 });
 
 // =============================================================================
+// Color Control Tests
+// =============================================================================
+describe('Color Control', () => {
+  const fixturePath = join(__dirname, 'test', 'fixtures', 'minimal.md');
+
+  it('should disable colors with --no-color flag', () => {
+    const output = execSync(`node --no-warnings cli.js --no-color analyze "${fixturePath}"`, {
+      encoding: 'utf-8',
+      env: { ...process.env, FORCE_COLOR: '1' } // Force color would normally enable
+    });
+    // Check that no ANSI escape codes are present
+    assert.ok(!/\x1b\[/.test(output), 'Output should not contain ANSI escape codes');
+    // But content should still be readable
+    assert.ok(output.includes('Total Score'), 'Output should still contain score');
+  });
+
+  it('should disable colors with NO_COLOR environment variable', () => {
+    const output = execSync(`node --no-warnings cli.js analyze "${fixturePath}"`, {
+      encoding: 'utf-8',
+      env: { ...process.env, NO_COLOR: '1', FORCE_COLOR: undefined }
+    });
+    // Check that no ANSI escape codes are present
+    assert.ok(!/\x1b\[/.test(output), 'Output should not contain ANSI escape codes');
+    // But content should still be readable
+    assert.ok(output.includes('Total Score'), 'Output should still contain score');
+  });
+
+  it('should produce readable output without colors', () => {
+    const output = execSync(`node --no-warnings cli.js --no-color analyze "${fixturePath}"`, {
+      encoding: 'utf-8'
+    });
+    // Verify key content is present and readable
+    assert.ok(output.includes('Analyzing README file'), 'Should show analyzing message');
+    assert.ok(output.includes('Total Score:'), 'Should show score');
+    assert.ok(output.includes('Missing Sections') || output.includes('All sections'), 'Should show section status');
+  });
+});
+
+// =============================================================================
 // Error Handling Tests
 // =============================================================================
 describe('Error Handling', () => {

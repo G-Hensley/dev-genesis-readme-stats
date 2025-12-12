@@ -9,6 +9,24 @@ import chalk from 'chalk';
 const { default: pkg } = await import('./package.json', { with: { type: "json" } });
 const version = pkg.version;
 
+// Check if colors should be disabled
+const shouldDisableColors = () => {
+  // Check for NO_COLOR environment variable (https://no-color.org/)
+  if (process.env.NO_COLOR !== undefined) {
+    return true;
+  }
+  // Check for non-TTY output (piped or redirected)
+  if (!process.stdout.isTTY) {
+    return true;
+  }
+  return false;
+};
+
+// Disable chalk colors if needed (before parsing args for --no-color)
+if (shouldDisableColors()) {
+  chalk.level = 0;
+}
+
 // Check if content appears to be binary or contains invalid UTF-8
 const isBinaryContent = (content) => {
   // Check for null bytes or UTF-8 replacement character in a single pass
@@ -54,7 +72,14 @@ const program = new Command();
 program
   .name('readme-stats')
   .description('CLI tool to analyze README files')
-  .version(version);
+  .version(version)
+  .option('--no-color', 'Disable colored output')
+  .hook('preAction', () => {
+    // Handle --no-color flag
+    if (program.opts().color === false) {
+      chalk.level = 0;
+    }
+  });
 
 program.command('analyze')
   .description('Analyze the README file for completeness')
