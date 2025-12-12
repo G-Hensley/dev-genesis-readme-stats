@@ -10,7 +10,11 @@ const { default: pkg } = await import('./package.json', { with: { type: "json" }
 const version = pkg.version;
 
 // Check if colors should be disabled based on environment
-// Precedence: NO_COLOR > FORCE_COLOR > TTY detection
+// Full color control precedence (highest to lowest priority):
+//   1. --no-color CLI flag (handled in preAction hook after parsing)
+//   2. NO_COLOR environment variable (disables colors)
+//   3. FORCE_COLOR environment variable (forces colors even in non-TTY)
+//   4. TTY detection (auto-disable for piped/redirected output)
 const shouldDisableColors = () => {
   // 1. NO_COLOR environment variable always wins (https://no-color.org/)
   if (process.env.NO_COLOR !== undefined) {

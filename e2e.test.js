@@ -369,6 +369,19 @@ describe('Color Control', () => {
     // But content should still be readable
     assert.ok(output.includes('Total Score'), 'Output should still contain score');
   });
+
+  it('should enable colors when FORCE_COLOR is set (simulates TTY)', () => {
+    // Properly exclude NO_COLOR from env to ensure colors are enabled
+    const { NO_COLOR, ...envWithoutNoColor } = process.env;
+    const output = execSync(`node --no-warnings cli.js analyze "${fixturePath}"`, {
+      encoding: 'utf-8',
+      env: { ...envWithoutNoColor, FORCE_COLOR: '1' }
+    });
+    // Check that ANSI escape codes ARE present when FORCE_COLOR is set
+    assert.ok(/\x1b\[/.test(output), 'Output should contain ANSI escape codes when FORCE_COLOR=1');
+    // And content should still be readable
+    assert.ok(output.includes('Total Score'), 'Output should still contain score');
+  });
 });
 
 // =============================================================================
