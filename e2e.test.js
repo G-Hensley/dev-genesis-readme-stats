@@ -337,7 +337,7 @@ describe('Color Control', () => {
   });
 
   it('should disable colors with NO_COLOR environment variable', () => {
-    // Properly exclude FORCE_COLOR from env to avoid setting it to "undefined" string
+    // Properly excludes FORCE_COLOR from env to avoid setting it to "undefined" string
     const { FORCE_COLOR, ...envWithoutForceColor } = process.env;
     const output = execSync(`node --no-warnings cli.js analyze "${fixturePath}"`, {
       encoding: 'utf-8',
@@ -371,7 +371,7 @@ describe('Color Control', () => {
   });
 
   it('should enable colors when FORCE_COLOR is set (simulates TTY)', () => {
-    // Properly exclude NO_COLOR from env to ensure colors are enabled
+    // Properly excludes NO_COLOR from env to ensure colors are enabled
     const { NO_COLOR, ...envWithoutNoColor } = process.env;
     const output = execSync(`node --no-warnings cli.js analyze "${fixturePath}"`, {
       encoding: 'utf-8',

@@ -15,8 +15,11 @@ const version = pkg.version;
 //   2. NO_COLOR environment variable (disables colors)
 //   3. FORCE_COLOR environment variable (forces colors even in non-TTY)
 //   4. TTY detection (auto-disable for piped/redirected output)
+// Note: This function runs at module load, before CLI parsing.
+// The --no-color flag is handled separately in preAction hook and can
+// override these settings because it runs after this initial check.
 const shouldDisableColors = () => {
-  // 1. NO_COLOR environment variable always wins (https://no-color.org/)
+  // NO_COLOR environment variable (https://no-color.org/)
   if (process.env.NO_COLOR !== undefined) {
     return true;
   }
