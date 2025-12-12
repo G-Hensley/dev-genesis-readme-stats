@@ -336,14 +336,16 @@ describe('Error Handling', () => {
       assert.strictEqual(error.status, 1, 'Should exit with code 1');
 
       // Verify helpful error message content
-      const output = error.stdout || '';
+      const output = error.stdout || error.stderr || '';
       assert.ok(output.includes('File not found'), 'Should display file not found message');
       assert.ok(output.includes('Create one to get started'), 'Should suggest creating a README');
       assert.ok(output.includes('A good README should include'), 'Should list recommended sections');
       assert.ok(output.includes('Title'), 'Should mention Title section');
       assert.ok(output.includes('Description'), 'Should mention Description section');
       assert.ok(output.includes('Installation'), 'Should mention Installation section');
+      assert.ok(output.includes('Usage'), 'Should mention Usage section');
       assert.ok(output.includes('License'), 'Should mention License section');
+      assert.ok(output.includes('Contributing'), 'Should mention Contributing section');
     }
   });
 });
