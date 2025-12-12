@@ -15,9 +15,18 @@ const readFile = (filePath) => {
     return data;
   } catch (error) {
     if (error.code === 'ENOENT') {
-      console.error(`File not found: ${filePath}`);
+      console.log(chalk.red(`\n❌ File not found: ${filePath}\n`));
+      console.log(chalk.yellow('It looks like you don\'t have a README yet. Create one to get started!\n'));
+      console.log('A good README should include:');
+      console.log(chalk.cyan('  • Title') + ' - A clear project name (# heading)');
+      console.log(chalk.cyan('  • Description') + ' - What your project does and why');
+      console.log(chalk.cyan('  • Installation') + ' - How to install/set up the project');
+      console.log(chalk.cyan('  • Usage') + ' - Examples of how to use it');
+      console.log(chalk.cyan('  • License') + ' - The license for your project');
+      console.log(chalk.cyan('  • Contributing') + ' - How others can contribute\n');
+      console.log(chalk.dim('Tip: Create a README.md file and run this command again.\n'));
     } else {
-      console.error(error.message);
+      console.log(chalk.red(`\n❌ Error reading file: ${error.message}\n`));
     }
     process.exit(1);
   }
@@ -35,9 +44,9 @@ program.command('analyze')
   .description('Analyze the README file for completeness')
   .argument('<file>', 'path to the README file')
   .action((filePath) => {
-    console.log(chalk.green(`\nAnalyzing README file: ${filePath}`));
-
     const readmeContent = readFile(filePath);
+
+    console.log(chalk.green(`\nAnalyzing README file: ${filePath}`));
     const analysisResults = {};
 
     // Check for each section using regex patterns
