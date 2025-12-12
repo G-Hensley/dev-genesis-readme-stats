@@ -320,6 +320,71 @@ describe('CLI Output Format', () => {
 });
 
 // =============================================================================
+// Color Control Tests
+// =============================================================================
+describe('Color Control', () => {
+  const fixturePath = join(__dirname, 'test', 'fixtures', 'minimal.md');
+
+  it('should disable colors with --no-color flag', () => {
+    const output = execSync(`node --no-warnings cli.js --no-color analyze "${fixturePath}"`, {
+      encoding: 'utf-8',
+      env: { ...process.env, FORCE_COLOR: '1' } // Force color would normally enable
+    });
+    // Check that no ANSI escape codes are present
+    assert.ok(!/\x1b\[/.test(output), 'Output should not contain ANSI escape codes');
+    // But content should still be readable
+    assert.ok(output.includes('Total Score'), 'Output should still contain score');
+  });
+
+  it('should disable colors with NO_COLOR environment variable', () => {
+    // Properly excludes FORCE_COLOR from env to avoid setting it to "undefined" string
+    const { FORCE_COLOR, ...envWithoutForceColor } = process.env;
+    const output = execSync(`node --no-warnings cli.js analyze "${fixturePath}"`, {
+      encoding: 'utf-8',
+      env: { ...envWithoutForceColor, NO_COLOR: '1' }
+    });
+    // Check that no ANSI escape codes are present
+    assert.ok(!/\x1b\[/.test(output), 'Output should not contain ANSI escape codes');
+    // But content should still be readable
+    assert.ok(output.includes('Total Score'), 'Output should still contain score');
+  });
+
+  it('should produce readable output without colors', () => {
+    const output = execSync(`node --no-warnings cli.js --no-color analyze "${fixturePath}"`, {
+      encoding: 'utf-8'
+    });
+    // Verify key content is present and readable
+    assert.ok(output.includes('Analyzing README file'), 'Should show analyzing message');
+    assert.ok(output.includes('Total Score:'), 'Should show score');
+    assert.ok(output.includes('Missing Sections') || output.includes('All sections'), 'Should show section status');
+  });
+
+  it('should disable colors when output is piped (non-TTY)', () => {
+    const output = execSync(`node --no-warnings cli.js analyze "${fixturePath}" | cat`, {
+      encoding: 'utf-8',
+      shell: true
+    });
+    // Check that no ANSI escape codes are present when piped
+    assert.ok(!/\x1b\[/.test(output), 'Output should not contain ANSI escape codes when piped');
+    // But content should still be readable
+    assert.ok(output.includes('Total Score'), 'Output should still contain score');
+  });
+
+  it('should enable colors when FORCE_COLOR is set (simulates TTY)', () => {
+    // Properly excludes NO_COLOR from env to ensure colors are enabled
+    const { NO_COLOR, ...envWithoutNoColor } = process.env;
+    const output = execSync(`node --no-warnings cli.js analyze "${fixturePath}"`, {
+      encoding: 'utf-8',
+      env: { ...envWithoutNoColor, FORCE_COLOR: '1' }
+    });
+    // Check that ANSI escape codes ARE present when FORCE_COLOR is set
+    assert.ok(/\x1b\[/.test(output), 'Output should contain ANSI escape codes when FORCE_COLOR=1');
+    // And content should still be readable
+    assert.ok(output.includes('Total Score'), 'Output should still contain score');
+  });
+});
+
+// =============================================================================
 // Error Handling Tests
 // =============================================================================
 describe('Error Handling', () => {

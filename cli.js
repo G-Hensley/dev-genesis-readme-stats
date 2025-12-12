@@ -9,6 +9,37 @@ import chalk from 'chalk';
 const { default: pkg } = await import('./package.json', { with: { type: "json" } });
 const version = pkg.version;
 
+// Check if colors should be disabled based on environment
+// Full color control precedence (highest to lowest priority):
+//   1. --no-color CLI flag (handled later in preAction hook; overrides all below)
+//   2. NO_COLOR environment variable (disables colors, takes precedence over FORCE_COLOR)
+//   3. FORCE_COLOR environment variable (forces colors even in non-TTY)
+//   4. TTY detection (auto-disable for piped/redirected output)
+// Note: This function runs at module load, before CLI parsing.
+// The --no-color flag is handled separately in preAction hook and can
+// override these settings because it runs after this initial check.
+const shouldDisableColors = () => {
+  // NO_COLOR environment variable (https://no-color.org/)
+  if (process.env.NO_COLOR !== undefined) {
+    return true;
+  }
+  // FORCE_COLOR forces colors even in non-TTY environments
+  if (process.env.FORCE_COLOR !== undefined && process.env.FORCE_COLOR !== '0' && process.env.FORCE_COLOR !== '') {
+    return false;
+  }
+  // Non-TTY output (piped or redirected)
+  if (!process.stdout.isTTY) {
+    return true;
+  }
+  return false;
+};
+
+// Disable chalk colors at module load for env vars and TTY detection
+// (--no-color flag is handled separately in preAction hook after CLI parsing)
+if (shouldDisableColors()) {
+  chalk.level = 0;
+}
+
 // Check if content appears to be binary or contains invalid UTF-8
 const isBinaryContent = (content) => {
   // Check for null bytes or UTF-8 replacement character in a single pass
@@ -54,7 +85,14 @@ const program = new Command();
 program
   .name('readme-stats')
   .description('CLI tool to analyze README files')
-  .version(version);
+  .version(version)
+  .option('--no-color', 'Disable colored output')
+  .hook('preAction', () => {
+    // Handle --no-color flag
+    if (program.opts().color === false) {
+      chalk.level = 0;
+    }
+  });
 
 program.command('analyze')
   .description('Analyze the README file for completeness')
