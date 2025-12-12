@@ -11,15 +11,8 @@ const version = pkg.version;
 
 // Check if content appears to be binary or contains invalid UTF-8
 const isBinaryContent = (content) => {
-  // Check for null bytes (common in binary files)
-  if (content.includes('\x00')) {
-    return true;
-  }
-  // Check for UTF-8 replacement character (appears when decoding invalid UTF-8)
-  if (content.includes('\uFFFD')) {
-    return true;
-  }
-  return false;
+  // Check for null bytes or UTF-8 replacement character in a single pass
+  return /[\x00\uFFFD]/.test(content);
 };
 
 const readFile = (filePath) => {
